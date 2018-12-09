@@ -40,12 +40,18 @@ function draw() {
         for (var i = 0; i < turrets.length; i++) {
             var rnd = random(5, 30)
             var t = turrets[i];
+            if (ship.position.x < t.position.x) {
+                t.rotation = 45 ;
+            }
+            else
+                t.rotation = -45;
             var fb = createSprite(t.position.x, t.position.y);
             fb.addImage(fbImage);
             fb.attractionPoint(rnd, ship.position.x, ship.position.y);
             fireballs.add(fb);
         }
     }
+     
     if (frameCount%60 == 0) {
         var turretSpacing = random(700, 900);
         var turret = createSprite(ship.position.x + turretSpacing, 35, 75, 75);
@@ -59,6 +65,17 @@ function draw() {
             turrets.add(turret);
         }
     }
+
+    if (frameCount%70 == 0) {
+        for (var i = 0; i < turrets.length; i++) {
+            var t = turrets[i];
+            if (t.rotation == 45)
+                t.rotation -= 45;
+            else
+                t.rotation += 45;
+        } 
+    }
+
     for (var i = 0; i < fireballs.length; i++)
         if (fireballs[i].position.y > height || fireballs[i].position.y < 0)
             fireballs[i].remove();
@@ -93,6 +110,7 @@ function draw() {
 	    }
     }
  	
+    /* arrow key and wasd keyboard controls */
     if (keyIsDown(UP_ARROW) || keyIsDown(87))
 		ship.up();
 	if (keyIsDown(DOWN_ARROW) || keyIsDown(83))
@@ -125,12 +143,14 @@ function draw() {
         bullets.add(bullet);
     }
 
+    /* when ship shoots turrets */
     bullets.collide(turrets, explosion);
     function explosion(spriteA, spriteB) {
         spriteA.remove(); /* remove bullet that ship fired */
         spriteB.remove(); /* remove turret that was hit*/
     }
 
+    /* when turrets shoot ship */
     fireballs.collide(ship, shipHit);
     function shipHit(spriteA, spriteB) {
         spriteA.remove() /* remove fireball that hit ship */ 
