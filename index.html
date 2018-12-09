@@ -43,8 +43,9 @@ function draw() {
             var t = turrets[i];
             var turret_y = t.position.x - t.position.y;
             var ship_x = ship.position.x - ship.position.y;
-            var atan_rot = Math.atan2(turret_y, ship_x);
-            console.log(atan_rot) * 180 / Math.PI;
+            var atan_rot = Math.atan2(turret_y, ship_x) * 180 / Math.PI;
+            console.log(atan_rot);
+            t.rotation = atan_rot;
             var fb = createSprite(t.position.x, t.position.y);
             fb.addImage(fbImage);
             fb.attractionPoint(rnd, ship.position.x, ship.position.y);
@@ -69,10 +70,11 @@ function draw() {
     if (frameCount%70 == 0) {
         for (var i = 0; i < turrets.length; i++) {
             var t = turrets[i];
-            if (t.rotation == 45)
-                t.rotation -= 45;
-            else
-                t.rotation += 45;
+            var turret_y = t.position.x - t.position.y;
+            var ship_x = ship.position.x - ship.position.y;
+            var atan_rot = Math.atan2(turret_y, ship_x) * 180 / Math.PI;
+            console.log(atan_rot);
+            t.rotation = atan_rot;
         } 
     }
 
