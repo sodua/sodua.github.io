@@ -15,7 +15,8 @@ mouseSupport : true,
 
 function setup() {
     createCanvas(1100, 600);
-    terrainImage = loadImage('assets/terrain.png');
+    terrainTop = loadImage('assets/terrain_top.png');
+    terrainBottom = loadImage('assets/terrain_bottom.png');
     turretImage = loadImage('assets/turret.png');
     turrets = new Group();
     shipImage = loadImage('assets/Ship.png');
@@ -129,8 +130,8 @@ function draw() {
         console.log(spriteB.score);
     }
     camera.off();
-    image(terrainImage, 0, 0);
-    image(terrainImage, 0, 565);
+    image(terrainTop, 0, 0);
+    image(terrainBottom, 0, 565);
     camera.on();
     drawSprites();
 }
