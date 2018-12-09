@@ -15,6 +15,7 @@ mouseSupport : true,
 
 function setup() {
     createCanvas(1100, 600);
+    bgImage = loadImage('assets/cavebg.png');
     terrainTop = loadImage('assets/terrain_top.png');
     terrainBottom = loadImage('assets/terrain_bottom.png');
     turretImage = loadImage('assets/turret.png');
@@ -40,11 +41,10 @@ function draw() {
         for (var i = 0; i < turrets.length; i++) {
             var rnd = random(5, 30)
             var t = turrets[i];
-            if (ship.position.x < t.position.x) {
-                t.rotation = 45 ;
-            }
-            else
-                t.rotation = -45;
+            var turret_y = t.position.x - t.position.y;
+            var ship_x = ship.position.x - ship.position.y;
+            var atan_rot = Math.atan2(turret_y, ship_x);
+            console.log(atan_rot) * 180 / Math.PI;
             var fb = createSprite(t.position.x, t.position.y);
             fb.addImage(fbImage);
             fb.attractionPoint(rnd, ship.position.x, ship.position.y);
@@ -158,6 +158,7 @@ function draw() {
         console.log(spriteB.score);
     }
     camera.off();
+    image(bgImage, 0, 0);
     image(terrainTop, 0, 0);
     image(terrainBottom, 0, 565);
     camera.on();
