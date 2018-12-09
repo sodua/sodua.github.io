@@ -21,6 +21,7 @@ function setup() {
     shipImage = loadImage('assets/Ship.png');
     ship = createSprite(64, height/2);
     ship.addImage("normal", shipImage);
+    ship.score = 10;
     bulletImage = loadImage('assets/fb_o.png');
     bullets = new Group();
     fbImage = loadImage('assets/fireball_small.png');
@@ -113,6 +114,19 @@ function draw() {
         bullet.setSpeed(30, ship.rotation);
         bullet.life = 30;
         bullets.add(bullet);
+    }
+
+    bullets.collide(turrets, explosion);
+    function explosion(spriteA, spriteB) {
+        spriteA.remove(); /* remove bullet that ship fired */
+        spriteB.remove(); /* remove turret that was hit*/
+    }
+
+    fireballs.collide(ship, shipHit);
+    function shipHit(spriteA, spriteB) {
+        spriteA.remove() /* remove fireball that hit ship */ 
+        spriteB.score--;
+        console.log(spriteB.score);
     }
     camera.off();
     image(terrainImage, 0, 0);
