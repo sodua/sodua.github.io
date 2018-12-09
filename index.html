@@ -6,7 +6,7 @@
 <script language="javascript" type="text/javascript" src="scripts/p5.dom.js"></script>
 <script language="javascript" type="text/javascript" src="scripts/virtualjoystick.js"></script>
 </head>
-<body><!--test-->
+<body>
 <script>
 var joystick = new VirtualJoystick({
 container : document.getElementById('defaultCanvas0'),
@@ -15,6 +15,7 @@ mouseSupport : true,
 
 function setup() {
     createCanvas(1100, 600);
+    terrainImage = loadImage('assets/terrain.png');
     turretImage = loadImage('assets/turret.png');
     turrets = new Group();
     shipImage = loadImage('assets/Ship.png');
@@ -113,7 +114,10 @@ function draw() {
         bullet.life = 30;
         bullets.add(bullet);
     }
-
+    camera.off();
+    image(terrainImage, 0, 0);
+    image(terrainImage, 0, 565);
+    camera.on();
     drawSprites();
 }
 joystick.addEventListener('touchStart', function(){
