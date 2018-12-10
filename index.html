@@ -13,13 +13,12 @@ container : document.getElementById('defaultCanvas0'),
 mouseSupport : true,
 });
 
+
 function setup() {
     createCanvas(1100, 600);
     bgImage = loadImage('assets/cavebg.png');
     terrainTop = loadImage('assets/terrain_top.png');
     terrainBottom = loadImage('assets/terrain_bottom.png');
-    turretImage = loadImage('assets/turret.png');
-    turrets = new Group();
     shipImage = loadImage('assets/ship-side.png');
     shipUpImage = loadImage('assets/ship-side-right_under.png');
     shipDownImage = loadImage('assets/ship-side-left.png');
@@ -30,11 +29,13 @@ function setup() {
     ship.addImage("down", shipDownImage);
     ship.addImage("phased", shipPhasedImage);
     ship.score = 10;
+    turretImage = loadImage('assets/turret.png');
+    turrets = new Group();
+    boomImage = loadImage('assets/explosion0001.png');
     bulletImage = loadImage('assets/fb_o.png');
     bullets = new Group();
     fbImage = loadImage('assets/fireball_small.png');
     fireballs = new Group();
-    camera.position.y = height/2;
 }
 
 function draw() {
@@ -52,30 +53,33 @@ function draw() {
 
     if (frameCount%60 == 0) {
         for (var i = 0; i < turrets.length; i++) {
-            var rnd = random(5, 30)
+            var fbspeed = random(5, 30)
             var fb = createSprite(t.position.x, t.position.y);
             fb.addImage(fbImage);
-            fb.attractionPoint(rnd, ship.position.x, ship.position.y);
+            fb.attractionPoint(fbspeed, ship.position.x, ship.position.y);
             fireballs.add(fb);
         }
     }
      
     if (frameCount%60 == 0) {
         var turretSpacing = random(700, 900);
-        var turret = createSprite(ship.position.x + turretSpacing, 35, 75, 75);
-        turret.addImage(turretImage);
-        turrets.add(turret);
-
+        if (turretSpacing > 800) {
+            var turret = createSprite(ship.position.x + turretSpacing, 35, 75, 75);
+            turret.addImage(turretImage);
+            turret.addAnimation("boom", 'assets/explosion0001.png', 'assets/explosion0003.png');
+            turrets.add(turret);
+        }
         if (turretSpacing < 800) {
             turret = createSprite(ship.position.x + turretSpacing, 565, 75, 75);
             turret.mirrorY(-1);
             turret.addImage(turretImage);
+            turret.addAnimation("boom", 'assets/explosion0001.png', 'assets/explosion0003.png');
             turrets.add(turret);
         }
     }
 
     for (var i = 0; i < fireballs.length; i++)
-        if (fireballs[i].position.y > height || fireballs[i].position.y < 0)
+        if (fireballs[i].position.x < width || fireballs[i].position.y < 0)
             fireballs[i].remove();
     for (var i = 0; i < turrets.length; i++)
         if (turrets[i].position.x < ship.position.x - width/2)
@@ -144,8 +148,9 @@ function draw() {
     /* when ship shoots turrets */
     bullets.collide(turrets, explosion);
     function explosion(spriteA, spriteB) {
+        spriteB.changeAnimation("boom");
         spriteA.remove(); /* remove bullet that ship fired */
-        spriteB.remove(); /* remove turret that was hit*/
+       /* spriteB.remove(); remove turret that was hit*/
     }
 
     /* when turrets shoot ship */
