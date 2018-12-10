@@ -10,8 +10,9 @@
 <script>
 var joystick = new VirtualJoystick({
 container : document.getElementById('defaultCanvas0'),
-mouseSupport : true,
+mouseSupport : false,
 });
+
 var fontsize = 40;
 
 function preload() {
@@ -42,11 +43,30 @@ function setup() {
     bullets = new Group();
     fbImage = loadImage('assets/fireball_small.png');
     fireballs = new Group();
+    autoFire = false;
+    gameOver = true;
+
 }
 
 function draw() {
+    if (gameOver) {
+        camera.off();
+        image(bgImage, 0, 0);
+        textAlign(CENTER);
+        drawWords("Press 'N' or swipe screen to start", width * .5);
+        camera.on();
+        if (keyWentDown('n') || keyWentDown('N'))
+            newGame();
+        if (joystick.right()||joystick.left()||joystick.down()||joystick.up()) {
+            autoFire = true;
+            newGame();
+        }
+    } 
+
+    if (!gameOver) {
     background(0);
     textAlign(RIGHT);
+
     for (var i = 0; i < turrets.length; i++) {
         var t = turrets[i];
         var turret_y = t.position.x - t.position.y;
@@ -57,7 +77,13 @@ function draw() {
         else
             t.rotation = -1 * atan_rot;
     }
-
+    if (frameCount%30 == 0 && autoFire) {
+        var bullet = createSprite(ship.position.x, ship.position.y);
+        bullet.addImage(bulletImage);
+        bullet.setSpeed(30, ship.rotation);
+        bullet.life = 30;
+        bullets.add(bullet);
+    }
     if (frameCount%60 == 0) {
         for (var i = 0; i < turrets.length; i++) {
             var fbspeed = random(5, 30)
@@ -144,6 +170,7 @@ function draw() {
         ship.position.x = ship.position.x + 2;
     }
 
+    
     if (keyWentDown('SPACE')) {
         var bullet = createSprite(ship.position.x, ship.position.y);
         bullet.addImage(bulletImage);
@@ -166,15 +193,35 @@ function draw() {
         spriteA.remove() /* remove fireball that hit ship */ 
         ship.changeAnimation("phased");
         spriteB.score--;
+        if (spriteB.score == 0)
+            die();
     }
     camera.off();
     image(bgImage, 0, 0);
     image(terrainTop, 0, 0);
     image(terrainBottom, 0, 565);
-    drawWords(width * .05);
+    drawWords(ship.score, width * .05);
     camera.on();
     drawSprites();
 }
+}
+
+function die() {
+    gameOver = true;
+}
+
+function newGame() {
+    turrets.removeSprites();
+    fireballs.removeSprites();
+    updateSprites(true);
+    ship.position.x = 64;
+    ship.position.y = height/2;
+    ship.rotation = 0;
+    ship.changeAnimation("normal");
+    ship.score = 100;
+    gameOver = false;
+}
+
 joystick.addEventListener('touchStart', function(){
     console.log('down')
 })
@@ -182,9 +229,12 @@ joystick.addEventListener('touchEnd', function(){
     console.log('up')
 })
 
-function drawWords(x) {
+function drawWords(score, x) {
     fill(255);
-    text(ship.score, x, 75);
+    text(score, x, 75);
+}
+function touchStarted() {
+    return true;
 }
 </script>
 </body>
