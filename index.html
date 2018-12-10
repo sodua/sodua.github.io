@@ -13,10 +13,6 @@ container : document.getElementById('defaultCanvas0'),
 mouseSupport : true,
 });
 
-function preload() {
-    bang = loadAnimation("assets/explosion1.png", "assets/explosion2.png", "assets/explosion3.png");
-}
-
 function setup() {
     createCanvas(1100, 600);
     bgImage = loadImage('assets/cavebg.png');
@@ -149,7 +145,6 @@ function draw() {
     bullets.collide(turrets, explosion);
     function explosion(spriteA, spriteB) {
         spriteA.remove(); /* remove bullet that ship fired */
-        animation(bang, spriteB.position.x, spriteB.position.y); 
         spriteB.remove(); /* remove turret that was hit*/
     }
 
