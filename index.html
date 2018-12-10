@@ -12,10 +12,16 @@ var joystick = new VirtualJoystick({
 container : document.getElementById('defaultCanvas0'),
 mouseSupport : true,
 });
+var fontsize = 40;
 
-
+function preload() {
+    font = loadFont('assets/bitwise.ttf');
+}
 function setup() {
     createCanvas(1100, 600);
+    textFont(font);
+    textSize(fontsize);
+    textAlign(CENTER, CENTER);
     bgImage = loadImage('assets/cavebg.png');
     terrainTop = loadImage('assets/terrain_top.png');
     terrainBottom = loadImage('assets/terrain_bottom.png');
@@ -28,7 +34,7 @@ function setup() {
     ship.addImage("up", shipUpImage);
     ship.addImage("down", shipDownImage);
     ship.addImage("phased", shipPhasedImage);
-    ship.score = 10;
+    ship.score = 100;
     turretImage = loadImage('assets/turret.png');
     turrets = new Group();
     boomImage = loadImage('assets/explosion0001.png');
@@ -40,6 +46,7 @@ function setup() {
 
 function draw() {
     background(0);
+    textAlign(RIGHT);
     for (var i = 0; i < turrets.length; i++) {
         var t = turrets[i];
         var turret_y = t.position.x - t.position.y;
@@ -164,6 +171,7 @@ function draw() {
     image(bgImage, 0, 0);
     image(terrainTop, 0, 0);
     image(terrainBottom, 0, 565);
+    drawWords(width * .05);
     camera.on();
     drawSprites();
 }
@@ -173,6 +181,11 @@ joystick.addEventListener('touchStart', function(){
 joystick.addEventListener('touchEnd', function(){
     console.log('up')
 })
+
+function drawWords(x) {
+    fill(255);
+    text(ship.score, x, 75);
+}
 </script>
 </body>
 </html>
