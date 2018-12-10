@@ -13,6 +13,10 @@ container : document.getElementById('defaultCanvas0'),
 mouseSupport : true,
 });
 
+function preload() {
+    bang = loadAnimation("assets/explosion1.png", "assets/explosion2.png", "assets/explosion3.png");
+}
+
 function setup() {
     createCanvas(1100, 600);
     bgImage = loadImage('assets/cavebg.png');
@@ -23,10 +27,12 @@ function setup() {
     shipImage = loadImage('assets/ship-side.png');
     shipUpImage = loadImage('assets/ship-side-right_under.png');
     shipDownImage = loadImage('assets/ship-side-left.png');
+    shipPhasedImage = loadImage('assets/ship-side-phased.png');
     ship = createSprite(64, height/2);
     ship.addImage("normal", shipImage);
     ship.addImage("up", shipUpImage);
     ship.addImage("down", shipDownImage);
+    ship.addImage("phased", shipPhasedImage);
     ship.score = 10;
     bulletImage = loadImage('assets/fb_o.png');
     bullets = new Group();
@@ -37,15 +43,20 @@ function setup() {
 
 function draw() {
     background(0);
+    for (var i = 0; i < turrets.length; i++) {
+        var t = turrets[i];
+        var turret_y = t.position.x - t.position.y;
+        var ship_x = ship.position.x - ship.position.y;
+        var atan_rot = Math.atan2(turret_y, ship_x) * 180 / Math.PI;
+        if (t.position.x > ship.position.x)
+            t.rotation = atan_rot;
+        else
+            t.rotation = -1 * atan_rot;
+    }
+
     if (frameCount%60 == 0) {
         for (var i = 0; i < turrets.length; i++) {
             var rnd = random(5, 30)
-            var t = turrets[i];
-            var turret_y = t.position.x - t.position.y;
-            var ship_x = ship.position.x - ship.position.y;
-            var atan_rot = Math.atan2(turret_y, ship_x) * 180 / Math.PI;
-            console.log(atan_rot);
-            t.rotation = atan_rot;
             var fb = createSprite(t.position.x, t.position.y);
             fb.addImage(fbImage);
             fb.attractionPoint(rnd, ship.position.x, ship.position.y);
@@ -65,17 +76,6 @@ function draw() {
             turret.addImage(turretImage);
             turrets.add(turret);
         }
-    }
-
-    if (frameCount%70 == 0) {
-        for (var i = 0; i < turrets.length; i++) {
-            var t = turrets[i];
-            var turret_y = t.position.x - t.position.y;
-            var ship_x = ship.position.x - ship.position.y;
-            var atan_rot = Math.atan2(turret_y, ship_x) * 180 / Math.PI;
-            console.log(atan_rot);
-            t.rotation = atan_rot;
-        } 
     }
 
     for (var i = 0; i < fireballs.length; i++)
@@ -149,6 +149,7 @@ function draw() {
     bullets.collide(turrets, explosion);
     function explosion(spriteA, spriteB) {
         spriteA.remove(); /* remove bullet that ship fired */
+        animation(bang, spriteB.position.x, spriteB.position.y); 
         spriteB.remove(); /* remove turret that was hit*/
     }
 
@@ -156,8 +157,8 @@ function draw() {
     fireballs.collide(ship, shipHit);
     function shipHit(spriteA, spriteB) {
         spriteA.remove() /* remove fireball that hit ship */ 
+        ship.changeAnimation("phased");
         spriteB.score--;
-        console.log(spriteB.score);
     }
     camera.off();
     image(bgImage, 0, 0);
