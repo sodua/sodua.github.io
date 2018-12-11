@@ -7,7 +7,7 @@ var fontsize = 40;
 var ship;
 var turrets, bullets, fireballs;
 var shipImage, shipUpImage, shipDownImage, shipPhasedImage;
-var bgImage, terrainTop, terrainBottom, turretImage, boomImage;
+var splashImage, bgImage, terrainTop, terrainBottom, turretImage, boomImage;
 var bulletImage, fbImage;
 var autoFire, gameOver, gameScore;
 
@@ -19,6 +19,7 @@ function setup() {
     textFont(font);
     textSize(fontsize);
     textAlign(CENTER, CENTER);
+    splashImage = loadImage('assets/splash.png');
     bgImage = loadImage('assets/cavebg.png');
     terrainTop = loadImage('assets/terrain_top.png');
     terrainBottom = loadImage('assets/terrain_bottom.png');
@@ -48,11 +49,11 @@ function setup() {
 function draw() {
     if (gameOver) {
         camera.off();
-        image(bgImage, 0, 0);
+        background(0);
+        image(splashImage, 150, 50);
         textAlign(CENTER);
-        drawWords("Press 'N' or swipe screen to start", width * .5);
         camera.on();
-        if (keyWentDown('n') || keyWentDown('N'))
+        if (keyWentDown('SPACE'))
             newGame();
         if (joystick.right()||joystick.left()||joystick.down()||joystick.up()) {
             autoFire = true;
