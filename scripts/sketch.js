@@ -9,7 +9,7 @@ var turrets, bullets, fireballs;
 var shipImage, shipUpImage, shipDownImage, shipPhasedImage;
 var bgImage, terrainTop, terrainBottom, turretImage, boomImage;
 var bulletImage, fbImage;
-var autoFire, gameOver;
+var autoFire, gameOver, gameScore;
 
 function preload() {
     font = loadFont('assets/iAWriterDuospace-Bold.otf');
@@ -41,6 +41,7 @@ function setup() {
     fireballs = new Group();
     autoFire = false;
     gameOver = true;
+    gameScore = 0;
 
 }
 
@@ -189,6 +190,7 @@ function draw() {
     bullets.collide(turrets, explosion);
     function explosion(spriteA, spriteB) {
         spriteB.changeAnimation("boom");
+        gameScore += 50;
         spriteA.remove(); /* remove bullet that ship fired */
     }
 
@@ -206,6 +208,7 @@ function draw() {
     image(terrainTop, 0, 0);
     image(terrainBottom, 0, 565);
     drawWords(ship.score, width * .05);
+    drawWords(gameScore, width * .8);
     camera.on();
     drawSprites();
   }
@@ -224,6 +227,7 @@ function newGame() {
     ship.rotation = 0;
     ship.changeAnimation("normal");
     ship.score = 100;
+    gameScore = 0;
     gameOver = false;
 }
 
