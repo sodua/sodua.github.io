@@ -23,7 +23,7 @@ A side-scrolling shoot 'em up game, with the intention of adding a 2 player mode
 
 ## Authors
 
-* **Charles Hildreth** **Michael Rivera** **Owen Gibson**
+* **Charles Hildreth**, **Michael Rivera**, **Owen Gibson**
 
 ## Acknowledgments
 
