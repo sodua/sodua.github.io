@@ -3,7 +3,7 @@ container : document.getElementById('defaultCanvas0'),
 mouseSupport : false,
 });
 
-var fontsize = 40;
+var fontsize = 30;
 var ship;
 var turrets, bullets, fireballs;
 var shipImage, shipUpImage, shipDownImage, shipPhasedImage;
@@ -208,8 +208,10 @@ function draw() {
     image(bgImage, 0, 0);
     image(terrainTop, 0, 0);
     image(terrainBottom, 0, 565);
-    drawWords(ship.score, width * .05);
-    drawWords(gameScore, width * .8);
+    drawWords("life:", width * .05);
+    drawWords(ship.score, width * .12);
+    drawWords("score:", width * .8);
+    drawWords(gameScore, width * .89);
     camera.on();
     drawSprites();
   }
